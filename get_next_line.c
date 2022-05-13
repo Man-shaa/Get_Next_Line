@@ -6,7 +6,7 @@
 /*   By: msharifi <msharifi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 18:19:54 by msharifi          #+#    #+#             */
-/*   Updated: 2022/05/13 18:14:21 by msharifi         ###   ########.fr       */
+/*   Updated: 2022/05/13 19:12:35 by msharifi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*get_buffer(char *str, int fd)
 		byte = read(fd, buffer, BUFFER_SIZE);
 		if (byte == -1)
 		{
-			free (buffer);	// FREE LE BUFFER PAS STR
+			free (buffer);
 			return (NULL);
 		}
 		buffer[byte] = '\0';
@@ -62,7 +62,7 @@ char	*get_line(char *str)
 		j++;
 	}
 	line[j] = '\0';
-	return(line);
+	return (line);
 }
 
 char	*remainding_line(char *str)
@@ -77,7 +77,7 @@ char	*remainding_line(char *str)
 		i++;
 	if (str[i] == '\0')
 	{
-		free(str); // PAS OUBLIER DE FREE STR
+		free(str);
 		return (NULL);
 	}
 	remainding = malloc(ft_strlen(str) - i + 1);
@@ -85,17 +85,12 @@ char	*remainding_line(char *str)
 		return (NULL);
 	i++;
 	while (str[i])
-	{
-		remainding[j] = str[i];
-		i++;
-		j++;
-	}
+		remainding[j++] = str[i++];
 	remainding[j] = '\0';
 	free(str);
 	return (remainding);
 }
 
-#include <stdio.h>
 char	*get_next_line(int fd)
 {
 	static char	*str;
@@ -104,33 +99,11 @@ char	*get_next_line(int fd)
 	if (BUFFER_SIZE <= 0 || fd < 0 || fd > 1023)
 		return (NULL);
 	str = get_buffer(str, fd);
-	// printf("BUFFER : %s", str);
 	if (!str)
 		return (NULL);
 	line = get_line(str);
-	// printf ("LIGNE : %s", line);
 	if (!line)
 		return (NULL);
 	str = remainding_line(str);
-	// printf("RESTE : %s", str);
 	return (line);
-}
-
-#include <stdio.h>
-#include <fcntl.h>
-int	main(void)
-{
-	char	*line;
-	int	fdtest = open("test.txt", O_RDWR);
-	int	fdnonl = open("nonl", O_RDWR);
-	int	i = 1;
-	while (i < 2)
-	{
-		line = get_next_line(fdnonl);
-		printf("%s", line);
-		free(line);
-		i++;
-	}
-	close(fdtest);
-	return (0);
 }
