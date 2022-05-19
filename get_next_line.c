@@ -6,104 +6,87 @@
 /*   By: msharifi <msharifi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/12 18:19:54 by msharifi          #+#    #+#             */
-/*   Updated: 2022/05/13 19:12:35 by msharifi         ###   ########.fr       */
+/*   Updated: 2022/05/19 19:12:14 by msharifi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*get_buffer(char *str, int fd)
+char	*is_remaining(char *str, char *buffer)
 {
-	char	*buffer;
-	int		byte;
-
-	buffer = malloc(BUFFER_SIZE + 1);
+	if (!str || str[0] == '\0')
+		return (NULL);
+	buffer = ft_strjoin(buffer, str);
 	if (!buffer)
 		return (NULL);
+	return (buffer);
+}
+
+char	*get_line(char *str, char *buffer, char *line, int fd)
+{
+	int		byte;
+	int		i;
+
+	i = 0;
 	byte = 1;
-	while (ft_strchr(str, '\n') == NULL && byte != 0)
+	while (ft_strchr(str) == -1 && byte != 0)
 	{
-		byte = read(fd, buffer, BUFFER_SIZE);
-		if (byte == -1)
-		{
-			free (buffer);
+		byte = read(fd, str, BUFFER_SIZE);
+		if (byte < 0 || str[0] == '\0')
 			return (NULL);
-		}
-		buffer[byte] = '\0';
-		str = ft_strjoin(str, buffer);
+		if (byte <= 0)
+			return (buffer);
+		str[BUFFER_SIZE + 1] = '\0';
+		buffer = ft_strjoin(buffer, str);
 	}
-	free(buffer);
-	return (str);
-}
-
-char	*get_line(char *str)
-{
-	char	*line;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	if (str[0] == '\0')
-		return (NULL);
-	while (str[i] && str[i] != '\n')
+	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	line = malloc(i + 2);
-	if (!line)
-		return (NULL);
-	while (str[j] && str[j] != '\n')
+	if (buffer[i] == '\n')
 	{
-		line[j] = str[j];
-		j++;
+		line = ft_substr(buffer, 0, ft_strchr(buffer) + 1);
+		return (free(buffer), line);
 	}
-	if (str[j] == '\n')
-	{
-		line[j] = '\n';
-		j++;
-	}
-	line[j] = '\0';
-	return (line);
+	return (buffer);
 }
 
-char	*remainding_line(char *str)
+char	*get_remaining(char *str)
 {
-	char	*remainding;
 	int		i;
 	int		j;
+	char	*remaining;
 
-	j = 0;
 	i = 0;
+	j = 0;
+	remaining = NULL;
+	if (!str)
+		return (NULL);
 	while (str[i] && str[i] != '\n')
 		i++;
 	if (str[i] == '\0')
-	{
-		free(str);
 		return (NULL);
-	}
-	remainding = malloc(ft_strlen(str) - i + 1);
-	if (!remainding)
-		return (NULL);
+	remaining = ft_calloc(ft_strlen(str) - i, 1);
 	i++;
 	while (str[i])
-		remainding[j++] = str[i++];
-	remainding[j] = '\0';
-	free(str);
-	return (remainding);
+		remaining[j++] = str[i++];
+	remaining[j] = '\0';
+	ft_strcpy(str, remaining);
+	return (free(remaining), str);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*str;
+	static char	str[BUFFER_SIZE + 1] = {0};
+	char		*buffer;
 	char		*line;
 
+	buffer = NULL;
+	line = NULL;
 	if (BUFFER_SIZE <= 0 || fd < 0 || fd > 1023)
 		return (NULL);
-	str = get_buffer(str, fd);
-	if (!str)
-		return (NULL);
-	line = get_line(str);
+	buffer = is_remaining(str, buffer);
+	line = get_line(str, buffer, line, fd);
 	if (!line)
 		return (NULL);
-	str = remainding_line(str);
+	get_remaining(str);
 	return (line);
 }
