@@ -34,9 +34,13 @@ char	*get_line(char *str, char *buffer, char *line, int fd)
 		byte = read(fd, str, BUFFER_SIZE);
 		if (byte < 0 || str[0] == '\0')
 			return (NULL);
-		if (byte <= 0)
+		if (byte == 0)
+		{
+			buffer[ft_strlen(buffer)] = '\0';
+			str[0] = '\0';
 			return (buffer);
-		str[BUFFER_SIZE + 1] = '\0';
+		}
+		str[byte] = '\0';
 		buffer = ft_strjoin(buffer, str);
 	}
 	while (buffer[i] && buffer[i] != '\n')

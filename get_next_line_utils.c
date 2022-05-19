@@ -32,9 +32,7 @@ int	ft_strchr(char *str)
 	while (str[i])
 	{
 		if (str[i] == '\n')
-		{
 			return (i);
-		}
 		i++;
 	}
 	return (-1);

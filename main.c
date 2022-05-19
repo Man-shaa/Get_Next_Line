@@ -11,7 +11,7 @@ int	main(int ac, char **av)
 	// int		i = 0;
 	int	fd = open(av[1], O_RDONLY);
 	line = get_next_line(fd);
-	printf("%s", line);
+	printf("%s\n", line);
 	free(line);
 	// while ((line = get_next_line(fd)))
 	// {
