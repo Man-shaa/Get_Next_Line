@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msharifi <msharifi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/12 18:19:54 by msharifi          #+#    #+#             */
-/*   Updated: 2022/05/19 19:12:14 by msharifi         ###   ########.fr       */
+/*   Created: 2022/05/19 20:59:10 by msharifi          #+#    #+#             */
+/*   Updated: 2022/05/19 21:07:15 by msharifi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
@@ -103,7 +103,7 @@ char	*get_remaining(char *str)
 
 char	*get_next_line(int fd)
 {
-	static char	str[BUFFER_SIZE + 1] = {0};
+	static char	str[1024][BUFFER_SIZE + 1] = {0};
 	char		*buffer;
 	char		*line;
 
@@ -111,10 +111,10 @@ char	*get_next_line(int fd)
 	line = NULL;
 	if (BUFFER_SIZE <= 0 || fd < 0 || fd > 1023)
 		return (NULL);
-	buffer = is_remaining(str, buffer);
-	line = get_line(str, buffer, line, fd);
+	buffer = is_remaining(str[fd], buffer);
+	line = get_line(str[fd], buffer, line, fd);
 	if (!line)
 		return (NULL);
-	get_remaining(str);
+	get_remaining(str[fd]);
 	return (line);
 }

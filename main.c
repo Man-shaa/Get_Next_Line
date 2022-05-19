@@ -8,19 +8,13 @@ int	main(int ac, char **av)
 {
 	(void)ac;
 	char	*line;
-	// int		i = 0;
 	int	fd = open(av[1], O_RDONLY);
-	line = get_next_line(fd);
-	printf("%s\n", line);
+	while ((line = get_next_line(fd)))
+	{
+		printf("%s", line);
+		free(line);
+	}
 	free(line);
-	// while ((line = get_next_line(fd)))
-	// {
-	// 	line = get_next_line(fd);
-	// 	printf("%s", line);
-	// 	free(line);
-	// 	// i++;
-	// }
-	// free(line);
 	close(fd);
 	return (0);
 }
