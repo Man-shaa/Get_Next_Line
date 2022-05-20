@@ -6,7 +6,7 @@
 /*   By: msharifi <msharifi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 20:59:10 by msharifi          #+#    #+#             */
-/*   Updated: 2022/05/20 13:22:14 by msharifi         ###   ########.fr       */
+/*   Updated: 2022/05/20 20:36:34 by msharifi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ char	*get_remaining(char *str)
 	if (str[i] == '\0')
 		return (NULL);
 	remaining = malloc(ft_strlen(str) - i * 1);
+	if(!remaining)
+		return (NULL);
 	i++;
 	while (str[i])
 		remaining[j++] = str[i++];
